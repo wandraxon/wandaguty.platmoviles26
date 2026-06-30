@@ -1,35 +1,26 @@
 import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 
-import PantallaAcercaDe from './PantallaAcercaDe';
-import PantallaDetalle from './PantallaDetalle';
-import PantallaInicio from './PantallaInicio';
+import StackNavigation from './app/navigation/StackNavigation';
 
-const Stack = createNativeStackNavigator();
+const pinkTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: '#fff0f6',
+    card: '#d63384',
+    primary: '#d63384',
+    text: '#4a2635',
+    border: '#f8a5c2',
+  },
+};
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <StatusBar style="auto" />
-      <Stack.Navigator initialRouteName="Inicio">
-        <Stack.Screen
-          name="Inicio"
-          component={PantallaInicio}
-          options={{ title: 'Inicio' }}
-        />
-        <Stack.Screen
-          name="Detalle"
-          component={PantallaDetalle}
-          options={{ title: 'Informacion del Usuario' }}
-        />
-        <Stack.Screen
-          name="AcercaDe"
-          component={PantallaAcercaDe}
-          options={{ title: 'Acerca de' }}
-        />
-      </Stack.Navigator>
+    <NavigationContainer theme={pinkTheme}>
+      <StatusBar style="light" />
+      <StackNavigation />
     </NavigationContainer>
   );
 }

@@ -2,23 +2,63 @@ import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
-  Button,
+  FlatList,
   Image,
   Pressable,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   View,
 } from 'react-native';
 
-function Card({ titulo, children, imagen, color, boton }) {
+const peliculas = [
+  {
+    titulo: 'Interstellar',
+    anio: 2014,
+    genero: 'Ciencia ficcion',
+  },
+  {
+    titulo: 'Barbie',
+    anio: 2023,
+    genero: 'Comedia',
+  },
+  {
+    titulo: 'Intensamente',
+    anio: 2015,
+    genero: 'Animacion',
+  },
+];
+
+function PinkButton({ title, onPress }) {
   return (
-    <View style={[styles.card, { backgroundColor: color }]}>
+    <Pressable
+      accessibilityRole="button"
+      onPress={onPress}
+      style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
+    >
+      <Text style={styles.buttonText}>{title}</Text>
+    </Pressable>
+  );
+}
+
+function Section({ title, children }) {
+  return (
+    <View style={styles.section}>
+      <Text style={styles.sectionTitle}>{title}</Text>
+      {children}
+    </View>
+  );
+}
+
+function Card({ titulo, children, imagen, boton }) {
+  return (
+    <View style={styles.card}>
       <Image source={imagen} style={styles.imagen} />
-      <Text style={styles.subtitulo}>{titulo}</Text>
-      <Text>{children}</Text>
-      <Button title={boton} onPress={() => Alert.alert(titulo)} />
+      <View style={styles.cardContent}>
+        <Text style={styles.cardTitle}>{titulo}</Text>
+        <Text style={styles.text}>{children}</Text>
+        <PinkButton title={boton} onPress={() => Alert.alert(titulo)} />
+      </View>
     </View>
   );
 }
@@ -30,12 +70,7 @@ export default function HomeScreen({ navigation }) {
   const [formulario, setFormulario] = useState({ nombre: '', password: '' });
   const [usuarios, setUsuarios] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  const pelicula = {
-    titulo: 'Interstellar',
-    anio: 2014,
-    genero: 'Ciencia ficcion',
-  };
+  const [error, setError] = useState('');
 
   useEffect(() => {
     fetch('https://jsonplaceholder.typicode.com/users')
@@ -45,79 +80,97 @@ export default function HomeScreen({ navigation }) {
         setLoading(false);
       })
       .catch(() => {
+        setError('No se pudieron cargar los usuarios.');
         setLoading(false);
       });
   }, []);
 
-  return (
-    <ScrollView style={styles.scroll} contentContainerStyle={styles.container}>
-      <Text style={styles.titulo}>Hola, Wanda</Text>
-      <Text>App de practicas de React Native con Expo.</Text>
+  const header = (
+    <View>
+      <View style={styles.hero}>
+        <Text style={styles.kicker}>Plataformas Moviles</Text>
+        <Text style={styles.title}>Hola, Wanda</Text>
+        <Text style={styles.heroText}>
+          Practicas integradas de React Native con Expo.
+        </Text>
+      </View>
 
-      <Text style={styles.subtitulo}>Clase 02 - Card</Text>
-      <View style={styles.bloque}>
+      <Section title="Clase 01 - MiPrimeraApp">
+        <Text style={styles.text}>Texto principal modificado con tu nombre.</Text>
+        <View style={styles.buttonRow}>
+          <PinkButton
+            title="Ir a saludo"
+            onPress={() => navigation.navigate('Saludo')}
+          />
+          <PinkButton
+            title="Ver perfil"
+            onPress={() => navigation.navigate('Perfil')}
+          />
+        </View>
+      </Section>
+
+      <Section title="Clase 02 - Card, props y children">
         <Card
           titulo="Tarjeta de React Native"
           imagen={require('../../assets/icon.png')}
-          color="lightblue"
           boton="Ver React"
         >
-          Esta tarjeta usa props y children.
+          Esta tarjeta usa props, children, Image, Text y boton.
         </Card>
         <Card
           titulo="Tarjeta de Expo"
           imagen={require('../../assets/splash-icon.png')}
-          color="lightgreen"
           boton="Ver Expo"
         >
-          Esta tarjeta tiene otra imagen y otro color.
+          Segunda tarjeta con otra imagen y descripcion.
         </Card>
         <Card
           titulo="Tarjeta de App"
           imagen={require('../../assets/android-icon-foreground.png')}
-          color="#fff3b0"
           boton="Ver App"
         >
-          Esta es la tercera tarjeta diferente.
+          Tercera tarjeta diferente para completar la practica.
         </Card>
-      </View>
+      </Section>
 
-      <Text style={styles.subtitulo}>Clase 03 - Flexbox y useState</Text>
-      <View style={styles.bloque}>
-        <View style={styles.fila}>
-          <View style={[styles.caja, styles.roja]}>
-            <Text>1</Text>
+      <Section title="Clase 03 - Flexbox y estilos condicionales">
+        <View style={styles.boxRow}>
+          <View style={[styles.box, styles.boxRose]}>
+            <Text style={styles.boxText}>1</Text>
           </View>
           <Pressable
-            style={[styles.caja, activo ? styles.azul : styles.verde]}
-            onPress={() => setActivo(!activo)}
+            onPress={() => setActivo((valor) => !valor)}
+            style={[styles.box, activo ? styles.boxActive : styles.boxInactive]}
           >
-            <Text>Tocar</Text>
+            <Text style={styles.boxText}>Tocar</Text>
           </Pressable>
-          <View style={[styles.caja, styles.amarilla]}>
-            <Text>3</Text>
+          <View style={[styles.box, styles.boxSoft]}>
+            <Text style={styles.boxText}>3</Text>
           </View>
         </View>
-      </View>
+      </Section>
 
-      <Text style={styles.subtitulo}>useState - contador e input</Text>
-      <View style={styles.bloque2}>
-        <Text>Valor: {contador}</Text>
-        <Button title="Sumar" onPress={() => setContador(contador + 1)} />
+      <Section title="useState - contador e input">
+        <Text style={styles.label}>Valor: {contador}</Text>
+        <PinkButton
+          title="Sumar"
+          onPress={() => setContador((valor) => valor + 1)}
+        />
         <TextInput
           style={styles.input}
           placeholder="Escribi algo"
+          placeholderTextColor="#9b5a73"
           value={texto}
           onChangeText={setTexto}
         />
-        <Text>Escribiste: {texto}</Text>
-      </View>
+        <Text style={styles.text}>Escribiste: {texto}</Text>
+      </Section>
 
-      <Text style={styles.subtitulo}>Clase 04 - Formulario</Text>
-      <View style={styles.bloque2}>
+      <Section title="Clase 04 - Formulario">
         <TextInput
           style={styles.input}
           placeholder="Nombre"
+          placeholderTextColor="#9b5a73"
           value={formulario.nombre}
           onChangeText={(valor) =>
             setFormulario({ ...formulario, nombre: valor })
@@ -126,6 +179,7 @@ export default function HomeScreen({ navigation }) {
         <TextInput
           style={styles.input}
           placeholder="Contrasena"
+          placeholderTextColor="#9b5a73"
           secureTextEntry
           value={formulario.password}
           onChangeText={(valor) =>
@@ -133,135 +187,228 @@ export default function HomeScreen({ navigation }) {
           }
         />
         {formulario.nombre !== '' && formulario.password !== '' ? (
-          <Text>Hola, {formulario.nombre}</Text>
+          <Text style={styles.welcome}>Hola, {formulario.nombre}</Text>
         ) : null}
-      </View>
+      </Section>
 
-      <Text style={styles.subtitulo}>AppPeliculas</Text>
-      <View style={styles.bloque2}>
-        <Button
-          title="Ir a Pelicula"
-          onPress={() => navigation.navigate('Pelicula', { pelicula })}
-        />
-        <View style={styles.separador} />
-        <Button
-          title="Ir a Contacto"
-          onPress={() => navigation.navigate('Contacto')}
-        />
-      </View>
+      <Section title="AppPeliculas - Navegacion con parametros">
+        <Text style={styles.text}>
+          Cada boton envia titulo, anio y genero a la pantalla Pelicula.
+        </Text>
+        <View style={styles.buttonRow}>
+          {peliculas.map((pelicula) => (
+            <PinkButton
+              key={pelicula.titulo}
+              title={pelicula.titulo}
+              onPress={() => navigation.navigate('Pelicula', { pelicula })}
+            />
+          ))}
+          <PinkButton
+            title="Contacto"
+            onPress={() => navigation.navigate('Contacto')}
+          />
+        </View>
+      </Section>
 
-      <Text style={styles.subtitulo}>Clase 05 - API y lista</Text>
-      <View style={styles.lista}>
+      <Section title="Clase 05 - API y FlatList">
+        <Text style={styles.text}>Usuarios cargados: {usuarios.length}</Text>
         {loading ? (
-          <ActivityIndicator size="large" color="blue" />
-        ) : (
-          usuarios.map((item) => (
-            <View key={item.id} style={styles.usuario}>
-              <Text style={styles.nombreUsuario}>{item.name}</Text>
-              <Text>{item.email}</Text>
-            </View>
-          ))
-        )}
-        {!loading && usuarios.length === 0 ? (
-          <Text>No se pudieron cargar los usuarios.</Text>
+          <View style={styles.loadingBox}>
+            <ActivityIndicator size="large" color="#d63384" />
+            <Text style={styles.text}>Cargando usuarios...</Text>
+          </View>
         ) : null}
-      </View>
-    </ScrollView>
+        {error !== '' ? <Text style={styles.error}>{error}</Text> : null}
+      </Section>
+    </View>
+  );
+
+  return (
+    <FlatList
+      style={styles.screen}
+      contentContainerStyle={styles.content}
+      data={loading ? [] : usuarios}
+      keyExtractor={(item) => item.id.toString()}
+      ListHeaderComponent={header}
+      ListEmptyComponent={
+        !loading && error === '' ? (
+          <Text style={styles.emptyText}>No hay usuarios para mostrar.</Text>
+        ) : null
+      }
+      renderItem={({ item }) => (
+        <View style={styles.userCard}>
+          <Text style={styles.userName}>{item.name}</Text>
+          <Text style={styles.text}>{item.email}</Text>
+        </View>
+      )}
+    />
   );
 }
 
 const styles = StyleSheet.create({
-  scroll: {
+  screen: {
     flex: 1,
-    backgroundColor: 'salmon',
+    backgroundColor: '#fff0f6',
   },
-  container: {
-    flexGrow: 1,
+  content: {
+    padding: 18,
+    paddingBottom: 32,
+  },
+  hero: {
+    backgroundColor: '#f783ac',
+    borderRadius: 8,
     padding: 20,
-    width: '100%',
-    backgroundColor: 'salmon',
+    marginBottom: 18,
   },
-  titulo: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    marginBottom: 10,
+  kicker: {
+    color: '#6f1d46',
+    fontSize: 13,
+    fontWeight: '700',
+    textTransform: 'uppercase',
   },
-  subtitulo: {
+  title: {
+    color: '#ffffff',
+    fontSize: 30,
+    fontWeight: '800',
+    marginTop: 6,
+  },
+  heroText: {
+    color: '#ffffff',
+    fontSize: 16,
+    marginTop: 8,
+  },
+  section: {
+    marginBottom: 22,
+  },
+  sectionTitle: {
+    color: '#9d174d',
     fontSize: 20,
-    fontWeight: 'bold',
-    marginTop: 20,
+    fontWeight: '800',
     marginBottom: 10,
   },
-  bloque: {
-    width: '100%',
-    opacity: 0.8,
+  text: {
+    color: '#4a2635',
+    fontSize: 15,
+    lineHeight: 21,
+  },
+  label: {
+    color: '#4a2635',
+    fontSize: 16,
+    fontWeight: '700',
     marginBottom: 10,
-    padding: 10,
+  },
+  buttonRow: {
     gap: 10,
+    marginTop: 10,
   },
-  bloque2: {
-    backgroundColor: '#ffffff',
-    opacity: 0.8,
-    padding: 10,
-    width: '100%',
-    maxWidth: 420,
-    marginBottom: 10,
-    justifyContent: 'center',
+  button: {
+    backgroundColor: '#d63384',
+    borderRadius: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  buttonPressed: {
+    opacity: 0.75,
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontSize: 15,
+    fontWeight: '700',
   },
   card: {
+    backgroundColor: '#ffffff',
+    borderColor: '#f8a5c2',
+    borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#cccccc',
+    flexDirection: 'row',
+    gap: 12,
     marginBottom: 10,
-    padding: 10,
+    padding: 12,
+  },
+  cardContent: {
+    flex: 1,
+    gap: 8,
+  },
+  cardTitle: {
+    color: '#9d174d',
+    fontSize: 16,
+    fontWeight: '800',
   },
   imagen: {
-    width: 70,
-    height: 70,
+    width: 64,
+    height: 64,
+    borderRadius: 8,
   },
-  fila: {
+  boxRow: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
+    gap: 10,
   },
-  caja: {
-    width: 80,
-    height: 80,
+  box: {
+    width: 88,
+    height: 88,
     alignItems: 'center',
     justifyContent: 'center',
+    borderRadius: 8,
   },
-  roja: {
-    backgroundColor: 'red',
+  boxRose: {
+    backgroundColor: '#ff85a1',
   },
-  verde: {
-    backgroundColor: 'green',
+  boxInactive: {
+    backgroundColor: '#f06595',
   },
-  azul: {
-    backgroundColor: 'blue',
+  boxActive: {
+    backgroundColor: '#c2255c',
   },
-  amarilla: {
-    backgroundColor: 'yellow',
+  boxSoft: {
+    backgroundColor: '#fcc2d7',
+  },
+  boxText: {
+    color: '#ffffff',
+    fontWeight: '800',
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#999999',
-    marginTop: 10,
-    marginBottom: 10,
-    padding: 8,
-  },
-  usuario: {
-    borderWidth: 1,
-    borderColor: '#dddddd',
-    marginBottom: 8,
-    padding: 10,
     backgroundColor: '#ffffff',
+    borderColor: '#f8a5c2',
+    borderRadius: 8,
+    borderWidth: 1,
+    color: '#4a2635',
+    marginTop: 10,
+    padding: 12,
   },
-  lista: {
-    width: '100%',
-    maxWidth: 520,
+  welcome: {
+    color: '#9d174d',
+    fontSize: 16,
+    fontWeight: '800',
+    marginTop: 10,
   },
-  nombreUsuario: {
-    fontWeight: 'bold',
+  loadingBox: {
+    alignItems: 'center',
+    gap: 8,
+    paddingVertical: 12,
   },
-  separador: {
-    height: 10,
+  error: {
+    color: '#b00020',
+    fontWeight: '700',
+    marginTop: 8,
+  },
+  emptyText: {
+    color: '#4a2635',
+    textAlign: 'center',
+  },
+  userCard: {
+    backgroundColor: '#ffffff',
+    borderColor: '#f8a5c2',
+    borderRadius: 8,
+    borderWidth: 1,
+    marginBottom: 10,
+    padding: 12,
+  },
+  userName: {
+    color: '#9d174d',
+    fontSize: 16,
+    fontWeight: '800',
+    marginBottom: 4,
   },
 });

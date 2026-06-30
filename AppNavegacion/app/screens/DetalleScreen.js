@@ -1,5 +1,10 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+const datosFallback = {
+  nombre: 'Yesica',
+  edad: 25,
+};
+
 function PinkButton({ title, onPress }) {
   return (
     <Pressable
@@ -12,18 +17,16 @@ function PinkButton({ title, onPress }) {
   );
 }
 
-export default function ContactoScreen({ navigation }) {
+export default function DetalleScreen({ route, navigation }) {
+  const { datos = datosFallback } = route.params ?? {};
+
   return (
     <View style={styles.container}>
       <View style={styles.panel}>
-        <Text style={styles.kicker}>Contacto</Text>
-        <Text style={styles.titulo}>AppPeliculas</Text>
-        <Text style={styles.texto}>Email: contacto@appeliculas.com</Text>
-        <Text style={styles.texto}>Telefono: 11 5555 1234</Text>
-        <PinkButton
-          title="Volver al inicio"
-          onPress={() => navigation.navigate('Home')}
-        />
+        <Text style={styles.kicker}>Parametro recibido</Text>
+        <Text style={styles.title}>Nombre: {datos.nombre}</Text>
+        <Text style={styles.text}>Edad: {datos.edad}</Text>
+        <PinkButton title="Volver" onPress={() => navigation.goBack()} />
       </View>
     </View>
   );
@@ -41,7 +44,7 @@ const styles = StyleSheet.create({
     borderColor: '#f8a5c2',
     borderRadius: 8,
     borderWidth: 1,
-    gap: 10,
+    gap: 12,
     padding: 18,
   },
   kicker: {
@@ -50,20 +53,19 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     textTransform: 'uppercase',
   },
-  titulo: {
+  title: {
     color: '#9d174d',
-    fontSize: 28,
+    fontSize: 26,
     fontWeight: '800',
   },
-  texto: {
+  text: {
     color: '#4a2635',
-    fontSize: 17,
+    fontSize: 18,
   },
   button: {
     alignItems: 'center',
     backgroundColor: '#d63384',
     borderRadius: 8,
-    marginTop: 8,
     paddingHorizontal: 14,
     paddingVertical: 12,
   },

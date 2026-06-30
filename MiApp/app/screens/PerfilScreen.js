@@ -1,29 +1,21 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-function PinkButton({ title, onPress }) {
-  return (
-    <Pressable
-      accessibilityRole="button"
-      onPress={onPress}
-      style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
-    >
-      <Text style={styles.buttonText}>{title}</Text>
-    </Pressable>
-  );
-}
-
-export default function ContactoScreen({ navigation }) {
+export default function PerfilScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.panel}>
-        <Text style={styles.kicker}>Contacto</Text>
-        <Text style={styles.titulo}>AppPeliculas</Text>
-        <Text style={styles.texto}>Email: contacto@appeliculas.com</Text>
-        <Text style={styles.texto}>Telefono: 11 5555 1234</Text>
-        <PinkButton
-          title="Volver al inicio"
+        <Text style={styles.kicker}>Actividad extra</Text>
+        <Text style={styles.titulo}>Perfil</Text>
+        <Text style={styles.texto}>Nombre: Wanda</Text>
+        <Text style={styles.texto}>Edad: 25</Text>
+        <Text style={styles.texto}>Curso: Plataformas Moviles</Text>
+        <Pressable
+          accessibilityRole="button"
           onPress={() => navigation.navigate('Home')}
-        />
+          style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
+        >
+          <Text style={styles.buttonText}>Volver al inicio</Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -52,12 +44,12 @@ const styles = StyleSheet.create({
   },
   titulo: {
     color: '#9d174d',
-    fontSize: 28,
+    fontSize: 26,
     fontWeight: '800',
   },
   texto: {
     color: '#4a2635',
-    fontSize: 17,
+    fontSize: 16,
   },
   button: {
     alignItems: 'center',

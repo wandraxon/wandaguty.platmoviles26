@@ -12,17 +12,18 @@ function PinkButton({ title, onPress }) {
   );
 }
 
-export default function ContactoScreen({ navigation }) {
+export default function AcercaDeScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.panel}>
-        <Text style={styles.kicker}>Contacto</Text>
-        <Text style={styles.titulo}>AppPeliculas</Text>
-        <Text style={styles.texto}>Email: contacto@appeliculas.com</Text>
-        <Text style={styles.texto}>Telefono: 11 5555 1234</Text>
+        <Text style={styles.kicker}>Acerca de</Text>
+        <Text style={styles.title}>AppNavegacion</Text>
+        <Text style={styles.text}>
+          Aplicacion creada para practicar ReactNavigation con StackNavigator.
+        </Text>
         <PinkButton
-          title="Volver al inicio"
-          onPress={() => navigation.navigate('Home')}
+          title="Volver al Inicio"
+          onPress={() => navigation.navigate('Inicio')}
         />
       </View>
     </View>
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
     borderColor: '#f8a5c2',
     borderRadius: 8,
     borderWidth: 1,
-    gap: 10,
+    gap: 12,
     padding: 18,
   },
   kicker: {
@@ -50,20 +51,20 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     textTransform: 'uppercase',
   },
-  titulo: {
+  title: {
     color: '#9d174d',
     fontSize: 28,
     fontWeight: '800',
   },
-  texto: {
+  text: {
     color: '#4a2635',
-    fontSize: 17,
+    fontSize: 16,
+    lineHeight: 22,
   },
   button: {
     alignItems: 'center',
     backgroundColor: '#d63384',
     borderRadius: 8,
-    marginTop: 8,
     paddingHorizontal: 14,
     paddingVertical: 12,
   },

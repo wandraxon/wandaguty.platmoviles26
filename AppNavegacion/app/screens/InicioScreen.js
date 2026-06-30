@@ -1,5 +1,10 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+const usuario = {
+  nombre: 'Yesica',
+  edad: 25,
+};
+
 function PinkButton({ title, onPress }) {
   return (
     <Pressable
@@ -12,17 +17,22 @@ function PinkButton({ title, onPress }) {
   );
 }
 
-export default function ContactoScreen({ navigation }) {
+export default function InicioScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.panel}>
-        <Text style={styles.kicker}>Contacto</Text>
-        <Text style={styles.titulo}>AppPeliculas</Text>
-        <Text style={styles.texto}>Email: contacto@appeliculas.com</Text>
-        <Text style={styles.texto}>Telefono: 11 5555 1234</Text>
+        <Text style={styles.kicker}>Practica 06</Text>
+        <Text style={styles.title}>Pantalla de Inicio</Text>
+        <Text style={styles.text}>
+          StackNavigator con pantallas, parametros y botones de navegacion.
+        </Text>
         <PinkButton
-          title="Volver al inicio"
-          onPress={() => navigation.navigate('Home')}
+          title="Ir a Detalle"
+          onPress={() => navigation.navigate('Detalle', { datos: usuario })}
+        />
+        <PinkButton
+          title="Ir a Acerca De"
+          onPress={() => navigation.navigate('AcercaDe')}
         />
       </View>
     </View>
@@ -41,7 +51,7 @@ const styles = StyleSheet.create({
     borderColor: '#f8a5c2',
     borderRadius: 8,
     borderWidth: 1,
-    gap: 10,
+    gap: 12,
     padding: 18,
   },
   kicker: {
@@ -50,20 +60,20 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     textTransform: 'uppercase',
   },
-  titulo: {
+  title: {
     color: '#9d174d',
     fontSize: 28,
     fontWeight: '800',
   },
-  texto: {
+  text: {
     color: '#4a2635',
-    fontSize: 17,
+    fontSize: 16,
+    lineHeight: 22,
   },
   button: {
     alignItems: 'center',
     backgroundColor: '#d63384',
     borderRadius: 8,
-    marginTop: 8,
     paddingHorizontal: 14,
     paddingVertical: 12,
   },
