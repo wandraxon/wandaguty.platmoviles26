@@ -3,9 +3,9 @@ import {
   ActivityIndicator,
   Alert,
   Button,
-  FlatList,
   Image,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -49,11 +49,10 @@ export default function HomeScreen({ navigation }) {
       });
   }, []);
 
-  const encabezado = (
-    <View style={styles.container}>
+  return (
+    <ScrollView style={styles.scroll} contentContainerStyle={styles.container}>
       <Text style={styles.titulo}>Hola, Wanda</Text>
       <Text>App de practicas de React Native con Expo.</Text>
-
 
       <Text style={styles.subtitulo}>Clase 02 - Card</Text>
       <View style={styles.bloque}>
@@ -83,10 +82,8 @@ export default function HomeScreen({ navigation }) {
         </Card>
       </View>
 
-
-          <Text style={styles.subtitulo}>Clase 03 - Flexbox y useState</Text>
+      <Text style={styles.subtitulo}>Clase 03 - Flexbox y useState</Text>
       <View style={styles.bloque}>
-        
         <View style={styles.fila}>
           <View style={[styles.caja, styles.roja]}>
             <Text>1</Text>
@@ -103,10 +100,8 @@ export default function HomeScreen({ navigation }) {
         </View>
       </View>
 
-
       <Text style={styles.subtitulo}>useState - contador e input</Text>
       <View style={styles.bloque2}>
-        
         <Text>Valor: {contador}</Text>
         <Button title="Sumar" onPress={() => setContador(contador + 1)} />
         <TextInput
@@ -117,7 +112,6 @@ export default function HomeScreen({ navigation }) {
         />
         <Text>Escribiste: {texto}</Text>
       </View>
-
 
       <Text style={styles.subtitulo}>Clase 04 - Formulario</Text>
       <View style={styles.bloque2}>
@@ -143,43 +137,46 @@ export default function HomeScreen({ navigation }) {
         ) : null}
       </View>
 
-
       <Text style={styles.subtitulo}>AppPeliculas</Text>
       <View style={styles.bloque2}>
         <Button
           title="Ir a Pelicula"
-          onPress={() => navigation.navigate('Pelicula', { pelicula })} style={{ margin: 10}}
+          onPress={() => navigation.navigate('Pelicula', { pelicula })}
         />
-        <Button style={{ margin: 10 }} title="Ir a Contacto" onPress={() => navigation.navigate('Contacto')}  />
+        <View style={styles.separador} />
+        <Button
+          title="Ir a Contacto"
+          onPress={() => navigation.navigate('Contacto')}
+        />
       </View>
 
-      <Text style={styles.subtitulo}>Clase 05 - API y FlatList</Text>
-      <View style={styles.bloque}>
-        
-        {loading ? <ActivityIndicator size="large" color="blue" /> : null}
+      <Text style={styles.subtitulo}>Clase 05 - API y lista</Text>
+      <View style={styles.lista}>
+        {loading ? (
+          <ActivityIndicator size="large" color="blue" />
+        ) : (
+          usuarios.map((item) => (
+            <View key={item.id} style={styles.usuario}>
+              <Text style={styles.nombreUsuario}>{item.name}</Text>
+              <Text>{item.email}</Text>
+            </View>
+          ))
+        )}
+        {!loading && usuarios.length === 0 ? (
+          <Text>No se pudieron cargar los usuarios.</Text>
+        ) : null}
       </View>
-    </View>
-  );
-
-  return (
-    <FlatList
-      style={styles.container}
-      data={usuarios}
-      keyExtractor={(item) => item.id.toString()}
-      ListHeaderComponent={encabezado}
-      renderItem={({ item }) => (
-        <View style={styles.usuario}>
-          <Text>{item.name}</Text>
-          <Text>{item.email}</Text>
-        </View>
-      )}
-    />
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  scroll: {
     flex: 1,
+    backgroundColor: 'salmon',
+  },
+  container: {
+    flexGrow: 1,
     padding: 20,
     width: '100%',
     backgroundColor: 'salmon',
@@ -192,25 +189,23 @@ const styles = StyleSheet.create({
   subtitulo: {
     fontSize: 20,
     fontWeight: 'bold',
+    marginTop: 20,
     marginBottom: 10,
   },
   bloque: {
     width: '100%',
     opacity: 0.8,
-    margin: 10,
+    marginBottom: 10,
     padding: 10,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    gap: 10,
   },
   bloque2: {
     backgroundColor: '#ffffff',
     opacity: 0.8,
     padding: 10,
-    width: '30%',
-    margin: 10,
-    display: 'flex',
-    flexDirection: 'column',
+    width: '100%',
+    maxWidth: 420,
+    marginBottom: 10,
     justifyContent: 'center',
   },
   card: {
@@ -257,5 +252,16 @@ const styles = StyleSheet.create({
     borderColor: '#dddddd',
     marginBottom: 8,
     padding: 10,
+    backgroundColor: '#ffffff',
+  },
+  lista: {
+    width: '100%',
+    maxWidth: 520,
+  },
+  nombreUsuario: {
+    fontWeight: 'bold',
+  },
+  separador: {
+    height: 10,
   },
 });

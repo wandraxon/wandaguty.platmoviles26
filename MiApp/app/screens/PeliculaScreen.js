@@ -1,7 +1,13 @@
 import { Button, StyleSheet, Text, View } from 'react-native';
 
 export default function PeliculaScreen({ route, navigation }) {
-  const { pelicula } = route.params;
+  const { pelicula } = route.params ?? {
+    pelicula: {
+      titulo: 'Interstellar',
+      anio: 2014,
+      genero: 'Ciencia ficcion',
+    },
+  };
 
   return (
     <View style={styles.container}>
